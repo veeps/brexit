@@ -14,7 +14,7 @@ df
 
 ## getting rid of stopwords and filtering by word count
 
-df <- read_csv("brexitparty_uk.csv")
+df <- read_csv("data/brexit_tweets/brexitparty_uk.csv")
 head(df)
 brexit_party_count <- df %>%
   unnest_tokens(word, text)
@@ -41,7 +41,7 @@ brexit_party_count %>%
   coord_flip()
 #################################
 
-df2 <- read.csv("borisjohnson.csv")
+df2 <- read.csv("data/brexit_tweets/borisjohnson.csv")
 borisjohnson_count <- df2 %>%
   unnest_tokens(word, text)
 borisjohnson_count
@@ -57,7 +57,7 @@ borisjohnson_count %>%
 
 #################################
 
-df3 <- read_csv("Conservatives.csv")
+df3 <- read_csv("data/brexit_tweets/Conservatives.csv")
 Conservatives_count <- df3 %>%
   unnest_tokens(word, text)
 Conservatives_count
@@ -73,7 +73,7 @@ Conservatives_count %>%
 
 #####################################
 
-df4 <- read_csv("DUPleader.csv")
+df4 <- read_csv("data/brexit_tweets/DUPleader.csv")
 DUPleader_count <- df4 %>%
   unnest_tokens(word, text)
 DUPleader_count
@@ -89,7 +89,7 @@ DUPleader_count %>%
 
 #######################################
 
-df5 <- read_csv("duponline.csv")
+df5 <- read_csv("data/brexit_tweets/duponline.csv")
 DUP_count <- df5 %>%
   unnest_tokens(word, text)
 DUP_count
@@ -102,10 +102,25 @@ DUP_count <- DUP_count %>%
 
 DUP_count %>%
   count(word, sort = TRUE)
+######################################
+
+df6 <- read_csv("data/brexit_tweets/jeremycorbyn.csv")
+corbyn_count <- df6 %>%
+  unnest_tokens(word, text)
+corbyn_count
+data("stop_words")
+
+
+corbyn_count <- DUP_count %>%
+  anti_join(stop_words)
+
+
+corbyn_count %>%
+  count(word, sort = TRUE)
 
 #########################################
 
-df7 <- read_csv("joswinson.csv")
+df7 <- read_csv("data/brexit_tweets/joswinson.csv")
 swinson_count <- df7 %>%
   unnest_tokens(word, text)
 swinson_count
@@ -121,7 +136,7 @@ swinson_count %>%
 
 ########################################
 
-df8 <- read_csv("LibDems.csv")
+df8 <- read_csv("data/brexit_tweets/LibDems.csv")
 ld_count <- df8 %>%
   unnest_tokens(word, text)
 ld_count
@@ -137,7 +152,7 @@ ld_count %>%
 
 ########################################
 
-df9 <- read_csv("NicolaSturgeon.csv")
+df9 <- read_csv("data/brexit_tweets/NicolaSturgeon.csv")
 sturgeon_count <- df9 %>%
   unnest_tokens(word, text)
 sturgeon_count
@@ -153,7 +168,7 @@ sturgeon_count %>%
 
 #######################################
 
-df10 <- read_csv("Nigel_Farage.csv")
+df10 <- read_csv("data/brexit_tweets/Nigel_Farage.csv")
 farage_count <- df10 %>%
   unnest_tokens(word, text)
 farage_count
@@ -169,7 +184,7 @@ farage_count %>%
 
 #####################################
 
-df11 <- read_csv("theSNP.csv")
+df11 <- read_csv("data/brexit_tweets/theSNP.csv")
 snp_count <- df11 %>%
   unnest_tokens(word, text)
 snp_count
@@ -185,7 +200,7 @@ snp_count %>%
 
 #####################################
 
-df12 <- read_csv("UKLabour.csv")
+df12 <- read_csv("data/UKLabour.csv")
 labour_count <- df12 %>%
   unnest_tokens(word, text)
 labour_count
@@ -195,19 +210,31 @@ data("stop_words")
 labour_count <- labour_count %>%
   anti_join(stop_words)
 
+###labour_count <-labour_count %>%
+  ##count(word, sort = TRUE)
 
-labour_count %>%
+######### filter date
+
+
+labour_graph <- labour_count %>%
+  filter(between(as.Date(date), as.Date("2016-01-01"), as.Date("2016-06-01"))) %>%
   count(word, sort = TRUE)%>%
-  slice(1:10) %>% 
+  slice(1:10)  
+  
+###### take data frame and plot it
+  
+  labour_graph %>%
   ggplot() + geom_bar(aes(word, n), stat = "identity", fill = "#de5833") +
   theme_minimal() +
   labs(title = "Top words of labour brexit",
        subtitle = "using Tidytext in R",
        caption = "Data Source: labour-twitter")
 
+################
+
 ####################################
 
-install.packages("ggplot2", dependencies = TRUE)
+#install.packages("ggplot2", dependencies = TRUE)
 
 ####################################
 
