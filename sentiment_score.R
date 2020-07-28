@@ -15,14 +15,14 @@ df <- read_csv("data/brexit_tweets/brexitparty_uk.csv")
 tidy_text <- df %>%
   unnest_tokens(word,text) 
 
-# join the words with library
+# join the words with AFINN library
 afinn_words <- tidy_text %>%
   inner_join(get_sentiments("afinn"), by = "word")
 
-# scores by date
+########### Get the sum of scores for each day
 word_scores <- afinn_words %>%
-  group_by(date) %>%
-  summarise(score = sum(value))
+  group_by(date) %>% # group by date
+  summarise(score = sum(value)) # add all values for the score
 
 # plot by date
 ggplot(word_scores, aes(x = date, y = score)) + geom_line() +
@@ -31,8 +31,8 @@ ggplot(word_scores, aes(x = date, y = score)) + geom_line() +
 
 ########### Here's another version where you group by month
 month_scores <- afinn_words %>%
-  group_by(month=floor_date(date, "month")) %>%
-  summarize(score=mean(value)) # I'm taking the average score for the month here
+  group_by(month=floor_date(date, "month")) %>% # group by month
+  summarize(score=mean(value)) # Take the average score for month
 
 # plot by date
 ggplot(month_scores, aes(x = month, y = score)) + geom_line() + 
